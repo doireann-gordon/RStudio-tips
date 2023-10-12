@@ -1,0 +1,9 @@
+p <-
+  p + geom_errorbar(
+    data = df,
+    stat = "identity",
+    position = position_dodge2(),
+    width = 0.5,
+    
+    aes(ymax = Reading + SD, ymin = Reading)
+  )

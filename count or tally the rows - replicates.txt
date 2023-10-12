@@ -1,0 +1,2 @@
+# Add in timepoint count
+df %<>% dplyr::group_by(study_id) %>% dplyr::mutate(timepoint = seq_along(study_id)) %>% dplyr::ungroup() %>% unique() #double check there are no duplicates

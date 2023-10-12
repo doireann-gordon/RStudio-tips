@@ -1,0 +1,1 @@
+trimws(x) removes leading and trailing, additionally specifying "l" or "r" removes only leading or trailing, respectively

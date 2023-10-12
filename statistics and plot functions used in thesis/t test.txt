@@ -1,0 +1,2 @@
+stat.test <- compare_means(formula = gene_expression ~ disease, data = df, method = "t.test",  p.adjust.method = "bonferroni", group.by = "gene_symbol") %>%
+      dplyr::filter(p.signif != "ns")

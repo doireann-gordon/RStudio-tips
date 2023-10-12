@@ -1,0 +1,1 @@
+geom_text(stat='count', aes(label=..count..)

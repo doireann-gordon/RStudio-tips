@@ -1,0 +1,8 @@
+# Load
+files1 <- list.files("./Results/tidy/", "*.RData") # load the names of the RData files
+for(i in 1:4){ # load each into dfs named df1-4
+load(paste0("./Results/tidy/", files1[i], sep = ""))
+new_df <- paste0("df", i, sep = "")
+assign(new_df, df)
+}
+df <- dplyr::bind_rows(df1, df2, df3, df4) # merge all datasets

@@ -1,0 +1,23 @@
+The problem: a vector with letters and numbers is sorted alphabetically by default, but we want it sorted numerically e.g. Sample 1, Sample 9, Sample 10 is ordered like Sample 1, Sample 10, Sample 9 by default.
+
+1. extract the column you want to organise, and sort it numerically using str_sort, specifying you want to organise numerically. This doesn't work using the mutate function for some reason, which is why I can't just use this to re-order my_labs using mutate and str_sort
+
+  new_order <- stringr::str_sort(unique(df$my_labs), numeric = T)
+
+2. Using mutate and fct_relevel, we can re-organise the my_labs levels to be organised according to new_order (the extracted, sorted vector). Then, we can use dplyr::arrange to change the dataframe as a whole depending on my_labs, as it sorts the column (and the rest of the dataframe) based on the levels of the factor
+
+  df %<>% dplyr::mutate(my_labs = forcats::fct_relevel(my_labs, new_order)) %>% dplyr::arrange(my_labs)
+
+Pitfalls: don't use df$my_labs %<>% str_sort(), this messes up the association with other columns. There is probably a way with base R subsetting but I'm predominantly using dplyr
+
+OVERALL CODE
+new_order <- stringr::str_sort(unique(df$my_labs), numeric = T)
+df %<>% dplyr::mutate(my_labs = forcats::fct_relevel(my_labs, new_order)) %>% dplyr::arrange(my_labs)
+
+CODE FOR A FUNCTION THAT I STARTED BUT DIDN'T FINISH
+ordering_numerically <- function(df, my_var){
+  my_var <- enquo(my_var)
+  df %>% dplyr::select(!!my_var) %>% print()
+  new_order <- df %>% dplyr::pull(!!my_var) %>% stringr::str_sort(numeric = T)
+ df %<>% dplyr::mutate(my_var = forcats::fct_relevel(!!my_var, new_order)) %>% dplyr::arrange(!!my_var)
+}

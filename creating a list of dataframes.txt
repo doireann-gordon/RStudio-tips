@@ -1,0 +1,8 @@
+plates <- list()
+for (i in 1:3) {
+  j <- paste0("Plate ", i, sep = "")
+  df_temp <-
+    read.csv(paste0(my_date, "_layout_reps.csv", sep = "")) %>% as_tibble() %>% dplyr::filter(Plate == j)
+  plates[[i]] <- df_temp
+  rm(df_temp)
+}

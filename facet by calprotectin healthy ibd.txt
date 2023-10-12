@@ -1,0 +1,1 @@
+p <- p + facet_wrap( ~ Calprotectin.ugmg, scales = "free_x", labeller = as_labeller(c(`>500` = "IBD", `50-100` = "Healthy")))

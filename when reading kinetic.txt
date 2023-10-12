@@ -1,0 +1,1 @@
+will not read the dgree sign, change to "temp"

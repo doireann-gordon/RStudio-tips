@@ -1,0 +1,1 @@
+df1 <- df %>% dplyr::filter(Time == "24 hours") %>% dplyr::mutate(Experiment = paste0("2 h, 37 ", intToUtf8(176), "C", sep = ""))

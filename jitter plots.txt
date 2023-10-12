@@ -1,0 +1,14 @@
+df_sum <- df %>% dplyr::group_by(clinical_remission, gene_symbol, treatment_simple) %>% dplyr::summarise(n = n(), sd = sd(gene_expression), gene_expression = mean(gene_expression))
+
+
+ggplot(df, aes(x = clinical_remission, y = gene_expression)) +
+  geom_jitter(width = 0.2, colour = "grey", size = 0.5) +
+  geom_crossbar(data=df_sum, aes(ymin = gene_expression, ymax = gene_expression),
+                linewidth=0.2, width = 0.4) +
+  geom_errorbar(data = df_sum, aes(ymin = gene_expression-sd, ymax = gene_expression+sd), width = 0.2, linewidth = 0.5)+
+  facet_grid(gene_symbol~treatment_simple, scales = "free_y") +
+  stat_pvalue_manual(stat.test, y.position = c(10.5, 7, 8.5), label = "p.signif") + 
+  labs(y = "Gene expression (log2)", x = "Achieved clinical remission") +
+  theme_classic() +
+  theme(panel.background  = element_rect(colour = "black"))
+ggsave(paste0("./Results/plots/", my_id, "/Question 2 simple.png", sep = ""), width = 15, height = 15, units = "cm")

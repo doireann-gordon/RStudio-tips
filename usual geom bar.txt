@@ -1,0 +1,1 @@
+geom_bar(stat = "identity", position = position_dodge2(preserve = "single"), width = 0.5, colour = "black")

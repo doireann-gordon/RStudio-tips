@@ -1,0 +1,6 @@
+df <-
+    df %>% dplyr::group_by_at(setdiff(names(.), c("Replicate", "Reading"))) %>% dplyr::summarise(
+      Replicates = n(),
+      Mean.Reading = mean(Reading),
+      SD = sd(Reading)
+    ) %>% dplyr::ungroup()

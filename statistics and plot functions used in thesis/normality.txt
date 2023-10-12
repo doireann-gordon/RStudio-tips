@@ -1,0 +1,24 @@
+ norm_checks <- function(df, x_var, y_var) {
+    x_var <- enquo(x_var)
+    y_var <- enquo(y_var)
+    df %<>% dplyr::group_by(gene_symbol, !!x_var) %>% dplyr::group_split() # split for the normality tests
+    
+    lapply(df, function(x) {
+      norm <- shapiro.test(dplyr::pull(x,!!y_var))
+      t <-
+        tibble(
+          gene_symbol = unique(dplyr::pull(x, gene_symbol)),
+          disease_simple = unique(dplyr::pull(x, !!x_var)),
+          p.value = norm$p.value
+        )
+      t %<>% dplyr::mutate(Normality = ifelse(p.value >= 0.05, "Normal", "Non-normal"))
+      
+      
+      return(t)
+      
+      
+      
+    }) %>% dplyr::bind_rows() %>% dplyr::group_by(Normality, gene_symbol) %>% dplyr::summarise(n = n())
+  }
+  norm_checks(df, x_var = treatment, y_var = fold_change_4wk)
+  

@@ -1,0 +1,14 @@
+# CHECK FOR DUPLICATES ####
+df %>%
+  dplyr::group_by_at(setdiff(names(.), c("gene_expression"))) %>%
+  dplyr::summarise(n = dplyr::n(), sd = sd(gene_expression), gene_expression = mean(gene_expression), .groups = "drop") %>%
+  dplyr::filter(n > 1L) 
+# REPLACE DUPLICATES WITH MEAN VALUES PER GSM_SAMPLE
+df1 <- df %>%
+  dplyr::group_by_at(setdiff(names(.), c("gene_expression"))) %>%
+  dplyr::summarise(n = dplyr::n(), gene_expression = mean(gene_expression)) %>% dplyr::ungroup() %>% unique()
+if(nrow(df1) < nrow(df)){
+  print("successfully reduced number of rows")
+  df <- df1
+  rm(df1)
+}

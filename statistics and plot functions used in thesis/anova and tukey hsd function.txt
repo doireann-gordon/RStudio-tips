@@ -1,0 +1,33 @@
+anova_tukey_fun <- function(df){
+  ####
+  fit <- df %>%
+    aov(gene_expression ~ treatment_response,
+        data = .)
+  summary(fit)
+  sig <-
+    fit %>% TukeyHSD() %>% broom::tidy() %>% dplyr::mutate(
+      p.signif = case_when(
+        adj.p.value < 0.001 ~ "***",
+        adj.p.value < 0.01 ~ "**",
+        adj.p.value < 0.05 ~ "*",
+        adj.p.value >= 0.05 ~ "ns"
+      )
+    ) %>% dplyr::mutate(method = "anova") %>%
+    dplyr::rename(p.adj = adj.p.value)
+  
+  info <- df %>% dplyr::select(gene_symbol) %>% unique()
+  sig %<>% dplyr::bind_cols(info)
+  sig %<>% tidyr::separate_wider_delim(contrast,
+                                       delim = "-",
+                                       names = c("group1", "group2")) %>%
+
+    dplyr::select(-term) %>%
+    dplyr::select(group1, group2, p.adj, p.signif, method, gene_symbol)
+  return(sig)
+}
+  
+stat.test <- df %>% 
+  dplyr::group_split(gene_symbol) %>% 
+  lapply(anova_tukey_fun) %>%
+  dplyr::bind_rows() %>% 
+  dplyr::filter(p.signif != "ns") 

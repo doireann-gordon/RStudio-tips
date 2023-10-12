@@ -1,0 +1,4 @@
+my_date <- "22_7_19"
+as.Date(my_date, format = "%y_%m_%d")
+
+#### "2022-07-19"

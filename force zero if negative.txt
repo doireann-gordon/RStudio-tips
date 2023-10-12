@@ -1,0 +1,1 @@
+df %<>% dplyr::mutate(Reading = if_else(Reading < 0, 0, Reading))

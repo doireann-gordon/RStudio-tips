@@ -1,0 +1,23 @@
+library(tidyverse)
+library(magrittr)
+rm(list = ls())
+data(mtcars)
+mtcars %<>% tibble::rownames_to_column() %>% as_tibble() # change to tibble
+
+plot_fun <- function(df, x_var, y_var, grp1, grp2){ # general function
+  x_var <- enquo(x_var)
+  y_var <- enquo(y_var)
+  grp1 <- enquo(grp1)
+  grp2 <- enquo(grp2)
+  ggplot(df, aes(x = !!x_var, y = !!y_var)) + geom_point() +
+    facet_grid(rows = vars(!!grp1), cols = vars(!!grp2))
+}
+
+
+# what it should be
+ggplot(mtcars, aes(x = cyl, y = mpg)) + geom_point() +
+  facet_grid(rows = vars(gear), cols = vars(carb))
+
+# what the function produces (the same plot!)
+plot_fun(mtcars, cyl, mpg, gear, carb)
+

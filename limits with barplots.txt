@@ -1,0 +1,3 @@
+  p <- p + scale_y_continuous(limits=c(min(df$Reading) * 0.9, max(df$Reading) * 1.1),oob = rescale_none) # oob = rescale_none is necessary for bar plots. Regular scale makes things go out of bounds (https://stackoverflow.com/questions/10365167/geom-bar-bars-not-displaying-when-specifying-ylim)
+
+"scales" library required

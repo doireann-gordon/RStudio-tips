@@ -1,0 +1,29 @@
+kruskall_dunn_fun <- function(df){
+  fit <-
+    compare_means(gene_expression ~ treatment_response,
+                  df,
+                  paired = F,
+                  method = "kruskal")
+    fit <- dunnTest(gene_expression ~ treatment_response,
+                    data = df,
+                    method = "bonferroni")
+    sig <- fit$res
+    sig %<>%
+      dplyr::rename(p.adj = P.adj) %>%
+      dplyr::mutate(p.signif = case_when(
+        p.adj < 0.001 ~ "***",
+        p.adj < 0.01 ~ "**",
+        p.adj < 0.05 ~ "*",
+        p.adj >= 0.05 ~ "ns"
+      )) %>% dplyr::mutate(method = "dunn test") %>%
+      tidyr::separate_wider_delim(Comparison,
+                                  delim = " - ",
+                                  names = c("group1", "group2")) %>%
+      dplyr::mutate(gene_symbol = unique(df$gene_symbol)) %>%
+      
+      dplyr::select(group1, group2, p.adj, p.signif, method, gene_symbol)
+    
+
+  return(sig)
+}
+stat.test <- df %>% dplyr::group_split(gene_symbol) %>% lapply(kruskall_dunn_fun) %>% dplyr::bind_rows() %>% dplyr::filter(p.signif != "ns")

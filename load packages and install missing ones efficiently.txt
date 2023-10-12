@@ -1,0 +1,24 @@
+# Install and load packages -------------------------------------
+# (https://statsandr.com/blog/an-efficient-way-to-install-and-load-r-packages/#more-efficient-way)
+
+# Package names
+packages <-
+  c(
+    "tidyverse",
+    "varhandle",
+    "plyr",
+    "magrittr",
+    "ggpubr",
+    "lubridate",
+    "psych",
+    "devtools"
+  )
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Packages loading
+invisible(lapply(packages, library, character.only = TRUE))

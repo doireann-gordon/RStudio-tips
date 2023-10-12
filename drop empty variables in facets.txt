@@ -1,0 +1,2 @@
+p <- p + facet_wrap(~my_key, scales = "free_x")
+scales could also be "free_y" or simply "free"

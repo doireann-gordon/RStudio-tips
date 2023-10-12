@@ -1,0 +1,5 @@
+p <- p  + theme_classic() + theme(panel.background = element_rect(colour = "black"), plot.subtitle = element_text(size = 10), legend.background = element_rect(colour = "black"), legend.justification = c(0, 1), legend.position = c(0, 1))
+
+legend.justification = c(1, 1), legend.position = c(1, 1) [top right]
+legend.justification = c(0, 1), legend.position = c(0, 1) [top left]
+(horizontal, vertical)

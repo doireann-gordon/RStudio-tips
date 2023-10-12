@@ -1,0 +1,1 @@
+Must ONLY be the curve and not include other factors e.g. inhibitors. Helpful to add another variable that specifies if it's the curve or sample

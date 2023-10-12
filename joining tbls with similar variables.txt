@@ -1,0 +1,7 @@
+grps <- setNames(setdiff(names(df1), c("Raw.reading", "SD.Raw.reading")), 
+                             setdiff(names(df), c("Reading", "SD")))
+
+sets the groups to merge.
+names() - names of variables
+setdiff - exclude these variables
+result is the variables of tbl except for the specified ones

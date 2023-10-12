@@ -1,0 +1,14 @@
+stats_fun <- function(df, x_var, y_var, my_method){
+  stat.test <- compare_means(reformulate(x_var, response = y_var), data = df, method = my_method,  p.adjust.method = "bonferroni", group.by = "gene_symbol") %>%
+    dplyr::mutate(p.signif = case_when(
+      p.adj > 0.05 ~ "ns",
+      p.adj > 0.01 ~ "*",
+      p.adj > 0.001 ~ "**",
+      p.adj > 0.0001 ~ "***",
+      p.adj <= 0.0001 ~ "****"
+    )) %>%
+    dplyr::filter(p.signif != "ns") %>%
+    dplyr::arrange(p.adj)
+  return(stat.test)
+}
+stats.test <- stats_fun(df, "response", "fold_change", my_method = "wilcox")

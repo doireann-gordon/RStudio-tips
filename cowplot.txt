@@ -1,0 +1,16 @@
+See 21_11_18_hplc1 or second annual review figures
+
+
+
+library(cowplot)
+library(gridExtra)
+rm(list = ls())
+
+load("./Results/interpolated.rdata")
+p_interpolated <- p_interpolated + labs(title = "", subtitle = "") + theme(legend.position = "none")
+load("./Results/raw.rdata")
+p_raw <- p_raw + theme(legend.position = "bottom", legend.background = element_rect(colour = "black"))
+# legend.justification = c(0, 1), legend.position = c(0, 1), legend.background = element_rect(colour = "black")
+both_plots <- plot_grid(p_raw, p_interpolated, labels=c("", ""), ncol = 1, nrow = 2, rel_heights = c(0.4, 0.6))
+print(both_plots)
+ggsave("./Results/both_plots.png", both_plots, width = 15, height = 10, units = "in")

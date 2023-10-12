@@ -1,0 +1,13 @@
+Changing "Hospital#1" etc.
+
+1. Create vector with the changes
+hospital_names <- c(
+                    `Hospital#1` = "Some Hospital",
+                    `Hospital#2` = "Another Hospital",
+                    `Hospital#3` = "Hospital Number 3",
+                    `Hospital#4` = "The Other Hospital"
+                    )
+
+2. Add as a labeller function
+facet_wrap(hospital ~ ., labeller = as_labeller(hospital_names))
+

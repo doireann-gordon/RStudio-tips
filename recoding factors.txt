@@ -1,0 +1,4 @@
+df %>% dplyr::mutate(my_factor = fct_recode(my_factor, 
+"A" = "Apples",
+"B" = "Bananas"))
+Changes Apples and Bananas to A and B, respectively

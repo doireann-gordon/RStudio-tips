@@ -1,0 +1,2 @@
+Format of folders and R projects should be YY_MM_DD
+Timepoint excel files should be named "timeN_Xh", where N is the count of the read e.g. the first read is 1 and the second read is 2, and X is the number of hours (or mins) e.g. "time1_0h". Counting the sequence of times prevents R putting files in a weird non-sequential order relative to time

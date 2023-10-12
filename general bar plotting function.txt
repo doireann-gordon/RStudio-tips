@@ -1,0 +1,115 @@
+plotting <- function(df, df_raw, results_folder, xvar, yvar, my_fill, interpolated) {
+  # df <- df1
+  # df_raw <- df_raw1
+# Plot prep
+  # set any negative Reading values to 0
+  df %<>% dplyr::mutate(Reading = if_else(Reading < 0, 0, Reading)) %>%
+    unique() %>%
+    dplyr::mutate(my_key = factor(
+      x = case_when(
+        GzmB.type == "Blank" ~ "Standard",
+        GzmB.type == "Sample" ~ "Sample",
+        GzmB.type == "hGzmB" ~ "Standard"
+      ),
+      levels = c("Standard", "Sample")
+    )) # add key for faceting
+  df_raw %<>% dplyr::mutate(Reading = if_else(Reading < 0, 0, Reading)) %>%
+    unique() %>%
+    dplyr::mutate(my_key = factor(
+      x = case_when(
+        GzmB.type == "Blank" ~ "Standard",
+        GzmB.type == "Sample" ~ "Sample",
+        GzmB.type == "hGzmB" ~ "Standard"
+      ),
+      levels = c("Standard", "Sample")
+    )) # add key for faceting
+  
+  # rlang
+  xvar <- rlang::enexpr(xvar)
+  yvar <- rlang::enexpr(yvar)
+  my_fill <- rlang::enexpr(my_fill)
+  
+  p <-
+    ggplot(df_raw, aes(x = !!xvar, y = !!yvar, fill = !!my_fill)) + geom_bar(
+      data = df,
+      stat = "identity",
+      position = position_dodge2(preserve = "single"),
+      width = 0.5,
+      colour = "black"
+    )
+  p <- p + facet_wrap( ~ my_key, scales = "free_x")
+#    p <- p + facet_wrap( ~ Calprotectin.ugmg, scales = "free_x", labeller = as_labeller(c(`>500` = "IBD", `50-100` = "Healthy")))
+  if(!is.null(my_fill)){
+    p <- p + scale_fill_manual(values = c("white", "grey40", "grey80"))
+  }
+  if (unique(df$Protocol) == "GzmBGreen activity") {
+    p <-
+      p + labs(
+        x = "",
+        y = "Relative fluorescence intensity",
+        title = "Activity",
+        subtitle = paste0(unique(df$Time),
+                          ", ",
+                          unique(df$Reading.type),
+                          sep = "")
+      )
+    my_filename <-
+      paste0(
+        results_folder,
+        unique(df$Time),
+        "_",
+        unique(df$Reading.type),
+        "_",
+        "_activity.png",
+        sep = ""
+      )
+  } else if (unique(df$Protocol) == "ELISA") {
+    p <-
+      p + labs(
+        x = "",
+        y = "Absorbance",
+        title = "Abundance",
+        subtitle = ""
+      )
+    my_filename <-
+      paste0(results_folder,
+             "elisa.png",
+             sep = "")
+  }
+  if(interpolated == TRUE){
+    p <- p + labs(y = "Estimated GzmB (pg/ml)")
+    print("y is estimated GzmB rather than raw values")
+  }
+  p <-
+    p + theme_classic() + theme(
+      strip.background = element_rect(fill = "white"),
+      plot.subtitle = element_text(size = 10),
+      panel.background = element_rect(colour = "black")
+      #axis.text.x = element_text(angle = 45, hjust = 1)
+    )
+  if(my_fill == "white"){
+    p <- p + theme(legend.position = "none")
+  }
+  
+  ggsave(
+    filename = my_filename,
+    plot = p,
+    width = 25,
+    height = 17,
+    units = "cm"
+  )
+  end_text <-
+    paste0(
+      "Plotted ",
+      unique(df$Protocol),
+      ", ",
+      unique(df$Time),
+      ", ",
+      unique(df$Reading.type),
+      sep = ""
+    )
+  print(end_text)
+  return(p)
+}
+
+use my_fill = "white" to remove a legend

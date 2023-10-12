@@ -1,0 +1,21 @@
+my_fun <- function(df, xyz, justthetip, x_var, y_var){
+  x_var <- enquo(x_var)
+  y_var <- enquo(y_var)
+  df_sum <- df %>% dplyr::group_by(!!x_var, gene_symbol) %>% dplyr::summarise(n = n(), sd = sd(!!y_var), !!quo_name(y_var) := mean(!!y_var))
+  
+  # plot
+  p <- ggplot(df, aes(x = !!x_var, y = !!y_var)) +
+    geom_jitter(width = 0.2, colour = "grey", size = 1) +
+    geom_crossbar(data=df_sum, aes(ymin = !!y_var, ymax = !!y_var),
+                  linewidth=0.2, width = 0.4) +
+    geom_errorbar(data = df_sum, aes(ymin = !!y_var-sd, ymax = !!y_var+sd), width = 0.2, linewidth = 0.5, position = "dodge")+
+    facet_grid(~gene_symbol, scales = "free_y") +
+    # stat_compare_means() +
+    stat_pvalue_manual(stat.test, y.position = xyz, label = "p.signif", tip.length = justthetip) +
+    labs(y = "Gene expression (log2)") +
+    theme_classic() +
+    theme(panel.background = element_rect(colour = "black"),
+          axis.title.x = element_blank())
+  return(p)
+  
+}

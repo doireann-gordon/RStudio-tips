@@ -1,0 +1,4 @@
+blank <-
+    df %>% dplyr::filter(Sample.type == "Blank") %>% dplyr::rename(Blank = Reading) %>% dplyr::pull(Blank)
+  df %<>% dplyr::mutate(Blank = blank) # add to data frame
+  df %<>% dplyr::mutate(Reading = Reading-Blank) %>% dplyr::select(-Blank) %>% dplyr::filter(Sample.type != "Blank")

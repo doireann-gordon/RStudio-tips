@@ -1,0 +1,3 @@
+https://forcats.tidyverse.org/reference/fct_relevel.html
+
+df %<>% dplyr::mutate(Medium = forcats::fct_relevel(Medium, c("Blank", "625 Standard", "1250 Standard", "2500 Standard")))

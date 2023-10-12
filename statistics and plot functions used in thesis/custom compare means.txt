@@ -1,0 +1,6 @@
+stats_fun <- function(df, x_var, y_var, my_method){
+  stat.test <- compare_means(reformulate(x_var, response = y_var), data = df, method = my_method,  p.adjust.method = "bonferroni", group.by = "gene_symbol") %>%
+    dplyr::filter(p.signif != "ns")
+  return(stat.test)
+}
+stat.test <- stats_fun(df, "response_secondary", "fold_change_8wk", my_method = "wilcox")

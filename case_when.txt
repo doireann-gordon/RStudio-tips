@@ -1,0 +1,24 @@
+A lot of times, I want to create a new column based on conditions of a previous column (e.g. Medium == "ChonBlock") but take values from another column (e.g. GzmB.pgml) or that column (Medium).
+
+df %<>% dplyr::mutate(labs = case_when(
+    Medium == "ChonBlock" ~ paste0(GzmB.pgml, " pg/ml", sep = ""),
+    Medium != "ChonBlock" ~ Medium
+  ))
+
+This often won't work because GzmB.pgml and Medium are different vector types, and the new column, labs, wants to be a character vector (I think that's right). It's best to convert everything to a character, and then use the "case_when" function. You can re-factor at the end 
+
+df %<>% dplyr::mutate(Medium = varhandle::unfactor(Medium)) %>% # unfactor (NB for case_when)
+  dplyr::mutate(GzmB.pgml = round(varhandle::unfactor(GzmB.pgml))) %>% # unfactor and round
+  dplyr::mutate(labs = case_when(
+    Medium == "ChonBlock" ~ paste0(as.character(GzmB.pgml), " pg/ml", sep = ""),
+    Medium != "ChonBlock" ~ as.character(Medium)
+  )) %>%
+  dplyr::mutate(Medium = as.factor(Medium)) %>% # refactor
+  dplyr::mutate(GzmB.pgml = as.factor(GzmB.pgml)) # refactor
+
+EVERYTHING ELSE!
+df %>% dplyr::mutate(disease_subtype = case_when(
+  disease == "CD" & tissue == "Ileum" ~ "CDi",
+  disease == "CD" & tissue == "Colon" ~ "CDc",
+  TRUE ~ disease # EVERYTHING ELSE
+))
